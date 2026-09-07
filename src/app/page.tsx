@@ -41,7 +41,7 @@ function Hero() {
       <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-[1180px] flex-col justify-center px-5 pt-28 pb-20 sm:px-8">
         <div className="max-w-2xl">
           <Kicker className="block mb-4">{BRAND.heroKicker}</Kicker>
-          <h1 className="font-display text-cream text-[clamp(2.75rem,6vw,4.75rem)] leading-[1.02] text-balance text-shadow-soft">
+          <h1 className="font-display text-cream text-[clamp(2.75rem,6vw,4.75rem)] leading-[1.02] text-shadow-soft">
             {BRAND.heroTitle}
           </h1>
           <p className="mt-6 max-w-xl text-cream text-lg sm:text-xl leading-relaxed drop-shadow-[0_2px_12px_rgba(23,16,11,0.9)]">
