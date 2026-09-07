@@ -477,7 +477,7 @@ function OutletsPreview() {
                 href="/outlets"
                 className="group relative flex h-full flex-col gap-2 overflow-hidden rounded-[18px] bg-char border border-cream/10 p-5 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:border-flame/40 hover:glow-soft"
               >
-                <span className="absolute right-4 top-4 font-display text-cream/35 text-5xl leading-none select-none" aria-hidden="true">
+                <span className="absolute right-4 top-4 font-display text-cream/50 text-5xl leading-none select-none" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex items-center justify-between">
