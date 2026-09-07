@@ -92,61 +92,136 @@ function Hero() {
 }
 
 /* ---------- Signature Dishes bento ---------- */
-function SignatureDishCard({
+function FeaturedDishCard({
   dish,
   className,
 }: {
   dish: (typeof SIGNATURE_DISHES)[number];
   className?: string;
 }) {
-  const big = dish.size === "lg";
   return (
     <article
-      className={`group relative overflow-hidden rounded-[18px] bg-char border border-cream/10 flex flex-col transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:glow-soft ${className ?? ""}`}
+      className={`group relative overflow-hidden rounded-[18px] bg-char border border-cream/10 flex flex-col sm:flex-row transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:border-flame/40 hover:glow-soft ${className ?? ""}`}
     >
-      <div className={`relative w-full overflow-hidden ${big ? "aspect-[16/11]" : "aspect-[4/3]"}`}>
+      {/* Food Image Container */}
+      <div className="relative w-full aspect-[16/10] sm:aspect-auto sm:w-[48%] min-h-[220px] sm:min-h-[300px] overflow-hidden bg-smoke self-stretch shrink-0">
         <Image
           src={dish.image}
           alt={dish.name}
           fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
+          sizes="(max-width: 640px) 100vw, 50vw"
+          className="object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
         />
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(180deg, transparent 40%, rgba(23,16,11,0.55) 78%, rgba(23,16,11,0.92) 100%)",
-          }}
-        />
-        <span className="absolute left-3 top-3 rounded-full bg-smoke/70 px-2 py-1 backdrop-blur-sm">
+        <div className="absolute inset-0 bg-gradient-to-t from-char/80 via-transparent to-transparent sm:hidden" />
+        <span className="absolute left-3.5 top-3.5 z-10 rounded-full bg-smoke/80 px-2 py-1 backdrop-blur-sm">
           <VegMark veg={dish.veg} />
         </span>
-        <span className="absolute right-3 top-3 rounded-full bg-flame px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
-          Signature
+        <span className="absolute right-3.5 top-3.5 z-10 rounded-full bg-gold/20 backdrop-blur-md px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-gold border border-gold/30">
+          Chef&apos;s Signature
         </span>
       </div>
-      <div className="flex flex-1 flex-col justify-between gap-3 p-5">
+
+      {/* Content Container */}
+      <div className="flex flex-1 flex-col justify-between p-6 sm:p-7 gap-4">
         <div>
-          <h3 className={`font-sans font-bold text-cream ${big ? "text-xl" : "text-lg"}`}>
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-flame">
+            Bestseller Wrap
+          </span>
+          <h3 className="mt-1.5 font-sans font-bold text-cream text-2xl sm:text-3xl leading-tight group-hover:text-gold transition-colors">
             {dish.name}
           </h3>
-          <p className="mt-1.5 text-muted-text text-sm leading-relaxed">{dish.description}</p>
+          <p className="mt-2.5 text-muted-text text-sm sm:text-base leading-relaxed">
+            {dish.description}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="rounded-full bg-smoke/80 border border-cream/10 px-3 py-1 text-xs text-cream/90 font-medium">
+              Thin Rumali Roti
+            </span>
+            <span className="rounded-full bg-smoke/80 border border-cream/10 px-3 py-1 text-xs text-cream/90 font-medium">
+              Flame-Charred
+            </span>
+          </div>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="font-sans font-extrabold text-gold text-xl tabular-nums">
-            Rs {dish.price}
-          </span>
+
+        <div className="flex items-center justify-between pt-4 border-t border-cream/10">
+          <div>
+            <span className="block text-[11px] uppercase tracking-wider text-muted-text font-medium">
+              Price
+            </span>
+            <span className="font-sans font-extrabold text-gold text-2xl tabular-nums leading-none">
+              Rs {dish.price}
+            </span>
+          </div>
           <Link
             href={BRAND.orderUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full bg-flame/10 px-3 py-1.5 text-sm font-semibold text-flame transition-colors hover:bg-flame hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full bg-flame px-5 py-2.5 text-sm font-bold text-white hover:bg-flame-deep transition-all shadow-md hover:shadow-flame/20 hover:-translate-y-0.5"
           >
-            Order
-            <ArrowRight size={14} weight="bold" />
+            Order Now
+            <ArrowRight size={16} weight="bold" />
           </Link>
         </div>
+      </div>
+    </article>
+  );
+}
+
+function StandardDishCard({
+  dish,
+  badge,
+  className,
+}: {
+  dish: (typeof SIGNATURE_DISHES)[number];
+  badge?: string;
+  className?: string;
+}) {
+  return (
+    <article
+      className={`group relative overflow-hidden rounded-[18px] bg-char border border-cream/10 flex flex-col justify-between transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:border-flame/40 hover:glow-soft ${className ?? ""}`}
+    >
+      <div>
+        <div className="relative w-full aspect-[4/3] overflow-hidden bg-smoke">
+          <Image
+            src={dish.image}
+            alt={dish.name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
+          />
+          <span className="absolute left-3 top-3 z-10 rounded-full bg-smoke/80 px-2 py-1 backdrop-blur-sm">
+            <VegMark veg={dish.veg} />
+          </span>
+          {badge && (
+            <span className="absolute right-3 top-3 z-10 rounded-full bg-gold/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gold border border-gold/30">
+              {badge}
+            </span>
+          )}
+        </div>
+
+        <div className="p-5 pb-3">
+          <h3 className="font-sans font-bold text-cream text-lg leading-snug group-hover:text-gold transition-colors">
+            {dish.name}
+          </h3>
+          <p className="mt-1.5 text-muted-text text-sm leading-relaxed line-clamp-2">
+            {dish.description}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between p-5 pt-3 border-t border-cream/10 mt-auto">
+        <span className="font-sans font-extrabold text-gold text-xl tabular-nums">
+          Rs {dish.price}
+        </span>
+        <Link
+          href={BRAND.orderUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-full bg-flame/10 px-3 py-1.5 text-sm font-semibold text-flame transition-colors hover:bg-flame hover:text-white"
+        >
+          Order
+          <ArrowRight size={14} weight="bold" />
+        </Link>
       </div>
     </article>
   );
@@ -174,22 +249,48 @@ function SignatureBento() {
           </div>
         </Reveal>
 
-        {/* Balanced bento: 2 large on top, 3 small below - no gaps */}
         <StaggerGroup
-          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
           stagger={0.08}
         >
-          <StaggerItem className="lg:col-span-2">
-            <SignatureDishCard dish={SIGNATURE_DISHES[0]} className="h-full" />
+          {/* Row 1, Col 1-2 (lg): Featured Wrap */}
+          <StaggerItem className="md:col-span-2 lg:col-span-2">
+            <FeaturedDishCard dish={SIGNATURE_DISHES[0]} className="h-full" />
           </StaggerItem>
-          <StaggerItem>
-            <SignatureDishCard dish={SIGNATURE_DISHES[1]} className="h-full" />
+
+          {/* Row 1, Col 3 (lg): Golden Ring Shawarma Specialty */}
+          <StaggerItem className="md:col-span-1 lg:col-span-1">
+            <StandardDishCard
+              dish={SIGNATURE_DISHES[1]}
+              badge="Signature Ring"
+              className="h-full"
+            />
           </StaggerItem>
-          {SIGNATURE_DISHES.slice(2).map((d) => (
-            <StaggerItem key={d.id}>
-              <SignatureDishCard dish={d} className="h-full" />
-            </StaggerItem>
-          ))}
+
+          {/* Row 2: Three equal cards across lg (Burger, Sandwich, Mojito) */}
+          <StaggerItem className="md:col-span-1 lg:col-span-1">
+            <StandardDishCard
+              dish={SIGNATURE_DISHES[2]}
+              badge="Flame-Grilled"
+              className="h-full"
+            />
+          </StaggerItem>
+
+          <StaggerItem className="md:col-span-1 lg:col-span-1">
+            <StandardDishCard
+              dish={SIGNATURE_DISHES[3]}
+              badge="Veg Specialty"
+              className="h-full"
+            />
+          </StaggerItem>
+
+          <StaggerItem className="md:col-span-1 lg:col-span-1">
+            <StandardDishCard
+              dish={SIGNATURE_DISHES[4]}
+              badge="House Cooler"
+              className="h-full"
+            />
+          </StaggerItem>
         </StaggerGroup>
       </div>
     </section>

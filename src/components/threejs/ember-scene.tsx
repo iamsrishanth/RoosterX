@@ -5,30 +5,6 @@ import { Canvas, useFrame, useThree, type ThreeElements } from "@react-three/fib
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
-/* ---- Golden Ring (signature torus) ---- */
-function GoldenRing() {
-  const ref = React.useRef<THREE.Mesh>(null!);
-  useFrame((_, delta) => {
-    if (ref.current) {
-      // ~8s per revolution on X axis, slow drift on Y
-      ref.current.rotation.x += delta * (Math.PI * 2) / 8;
-      ref.current.rotation.y += delta * 0.08;
-    }
-  });
-  return (
-    <mesh ref={ref} rotation={[Math.PI / 2.6, 0, 0]} position={[0, 0.2, 0]}>
-      <torusGeometry args={[2.0, 0.09, 32, 200]} />
-      <meshStandardMaterial
-        color="#F5A623"
-        emissive="#F5A623"
-        emissiveIntensity={2.4}
-        metalness={1}
-        roughness={0.18}
-        toneMapped={false}
-      />
-    </mesh>
-  );
-}
 
 /* ---- Ember particle field (rising sparks) ---- */
 function EmberParticles({ count }: { count: number }) {
@@ -148,15 +124,14 @@ export function EmberScene({ parallax, particleCount }: EmberSceneProps) {
       <pointLight position={[-3, -1, 2]} intensity={1.2} color="#F5A623" />
 
       <ParallaxGroup enabled={parallax}>
-        <GoldenRing />
         <EmberParticles count={particleCount} />
       </ParallaxGroup>
 
       <EffectComposer>
         <Bloom
-          intensity={1.15}
-          luminanceThreshold={0.65}
-          luminanceSmoothing={0.22}
+          intensity={0.9}
+          luminanceThreshold={0.55}
+          luminanceSmoothing={0.3}
           mipmapBlur
           radius={0.7}
         />
