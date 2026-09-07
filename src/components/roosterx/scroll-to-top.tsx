@@ -8,9 +8,24 @@ export function ScrollToTop() {
   const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 600);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    let clean = false;
+    const register = () => {
+      if (clean) return;
+      const onScroll = () => setVisible(window.scrollY > 600);
+      window.addEventListener("scroll", onScroll, { passive: true });
+    };
+    if ("requestIdleCallback" in window) {
+      const id = (window as any).requestIdleCallback(register);
+      return () => {
+        clean = true;
+        (window as any).cancelIdleCallback(id);
+      };
+    }
+    const timer = setTimeout(register, 1000);
+    return () => {
+      clean = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   function toTop() {

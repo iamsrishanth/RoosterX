@@ -65,8 +65,9 @@ export function EmberHero() {
     };
   }, []);
 
-  // pause when offscreen
+  // pause when offscreen (desktop only)
   React.useEffect(() => {
+    if (!isDesktop) return;
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -75,7 +76,7 @@ export function EmberHero() {
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [isDesktop]);
 
   const show3D = isDesktop && webgl && !reduce;
   const particleCount = 1000;
