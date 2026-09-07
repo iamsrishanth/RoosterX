@@ -97,7 +97,6 @@ export function EmberHero() {
           src="/food/hero-shawarma.jpg"
           alt=""
           fill
-          priority
           quality={65}
           sizes="(max-width: 768px) 100vw, 1200px"
           className="object-cover object-center opacity-55 mix-blend-screen"

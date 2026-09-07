@@ -52,6 +52,7 @@ export function Nav() {
           {/* Wordmark */}
           <Link
             href="/"
+            prefetch={false}
             className="font-display text-cream text-2xl leading-none tracking-tight hover:text-flame transition-colors"
             aria-label="RoosterX home"
           >
@@ -66,6 +67,7 @@ export function Nav() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
+                    prefetch={false}
                     className={cn(
                       "relative rounded-full px-4 py-1.5 text-sm font-semibold transition-colors duration-200",
                       active
@@ -123,6 +125,7 @@ export function Nav() {
             <div key={l.href}>
               <Link
                 href={l.href}
+                prefetch={false}
                 className="font-display text-cream text-4xl py-2 hover:text-flame transition-colors block text-center"
               >
                 {l.label}

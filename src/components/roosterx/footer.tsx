@@ -136,6 +136,7 @@ export function Footer() {
             </ul>
             <Link
               href="/franchise"
+              prefetch={false}
               className="inline-block text-gold font-bold hover:text-gold/80 transition-colors"
             >
               Own a RoosterX &rarr;

@@ -231,6 +231,7 @@ function SignatureBento() {
             </div>
             <Link
               href="/menu"
+              prefetch={false}
               className="inline-flex items-center gap-2 text-sm font-semibold text-cream hover:text-flame transition-colors"
             >
               See the full menu
@@ -462,6 +463,7 @@ function OutletsPreview() {
             </div>
             <Link
               href="/outlets"
+              prefetch={false}
               className="inline-flex items-center gap-2 text-sm font-semibold text-cream hover:text-flame transition-colors"
             >
               All branches and contact
@@ -475,6 +477,7 @@ function OutletsPreview() {
             <StaggerItem key={o.id}>
               <Link
                 href="/outlets"
+                prefetch={false}
                 className="group relative flex h-full flex-col gap-2 overflow-hidden rounded-[18px] bg-char border border-cream/10 p-5 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:border-flame/40 hover:glow-soft"
               >
                 <span className="absolute right-4 top-4 font-display text-cream/50 text-5xl leading-none select-none" aria-hidden="true">

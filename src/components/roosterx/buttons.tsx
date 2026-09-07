@@ -50,6 +50,7 @@ export const FlameButton = React.forwardRef<
       <Link
         ref={ref as React.Ref<HTMLAnchorElement>}
         href={href}
+        prefetch={false}
         onClick={onClick}
         className={cls}
         target={target}
@@ -102,6 +103,7 @@ export const GhostButton = React.forwardRef<
       <Link
         ref={ref as React.Ref<HTMLAnchorElement>}
         href={href}
+        prefetch={false}
         onClick={onClick}
         className={cls}
         target={target}
