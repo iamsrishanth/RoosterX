@@ -136,7 +136,7 @@ export function Footer() {
             </ul>
             <Link
               href="/franchise"
-              className="inline-block text-flame font-semibold hover:text-flame-deep transition-colors"
+              className="inline-block text-gold font-bold hover:text-gold/80 transition-colors"
             >
               Own a RoosterX &rarr;
             </Link>

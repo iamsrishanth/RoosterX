@@ -31,9 +31,22 @@ export function EmberHero() {
 
   // detect WebGL + device type on mount
   React.useEffect(() => {
-    setWebgl(hasWebGL());
     const desktop = window.matchMedia("(min-width: 1024px)").matches;
     setIsDesktop(desktop);
+    if (desktop) {
+      // Defer WebGL initialization so hydration and first paint are completely unblocked
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => {
+          setWebgl(hasWebGL());
+        });
+      } else {
+        setTimeout(() => {
+          setWebgl(hasWebGL());
+        }, 150);
+      }
+    } else {
+      setWebgl(false);
+    }
   }, []);
 
   // pause when offscreen
@@ -48,8 +61,8 @@ export function EmberHero() {
     return () => io.disconnect();
   }, []);
 
-  const show3D = webgl && !reduce;
-  const particleCount = isDesktop ? 1200 : 600;
+  const show3D = isDesktop && webgl && !reduce;
+  const particleCount = 1000;
 
   return (
     <div ref={ref} className="absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -69,7 +82,7 @@ export function EmberHero() {
           alt=""
           fill
           priority
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, 1200px"
           className="object-cover object-center opacity-55 mix-blend-screen"
         />
         {/* food-edge ember glow only */}

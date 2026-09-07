@@ -116,7 +116,7 @@ export function Kicker({
   return (
     <span
       className={cn(
-        "font-display text-flame uppercase tracking-[0.18em] text-[1.05rem] leading-none",
+        "font-display text-[#FF5722] uppercase tracking-[0.18em] text-[1.05rem] leading-none",
         className,
       )}
     >

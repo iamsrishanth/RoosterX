@@ -14,7 +14,7 @@ export function VegMark({
 }) {
   if (veg) {
     return (
-      <span className={cn("inline-flex items-center gap-2", className)} aria-label="Vegetarian">
+      <span role="img" className={cn("inline-flex items-center gap-2", className)} aria-label="Vegetarian">
         <svg width="14" height="14" viewBox="0 0 14 14" className="shrink-0" aria-hidden="true">
           <rect
             x="0.75"
@@ -33,7 +33,7 @@ export function VegMark({
     );
   }
   return (
-    <span className={cn("inline-flex items-center gap-2", className)} aria-label="Non-vegetarian">
+    <span role="img" className={cn("inline-flex items-center gap-2", className)} aria-label="Non-vegetarian">
       <svg width="14" height="14" viewBox="0 0 14 14" className="shrink-0" aria-hidden="true">
         <polygon
           points="7,1 13.2,12.5 0.8,12.5"
