@@ -1,26 +1,39 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
+// Shared IntersectionObserver for all reveal animations to minimize main-thread overhead
+let observer: IntersectionObserver | null = null;
+const callbacks = new Map<Element, () => void>();
 
-/* useMountedReveal: returns true only after client mount AND motion is allowed.
-   Before mount (SSR / first paint) content renders visible (no opacity:0),
-   satisfying the progressive-enhancement rule. After mount, the reveal applies. */
-function useMountedReveal() {
-  const reduce = useReducedMotion();
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
-  return mounted && !reduce;
+function getObserver() {
+  if (typeof window === "undefined") return null;
+  if (!observer) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const cb = callbacks.get(entry.target);
+            if (cb) {
+              cb();
+              callbacks.delete(entry.target);
+              observer?.unobserve(entry.target);
+            }
+          }
+        });
+      },
+      { rootMargin: "0px 0px -40px 0px" },
+    );
+  }
+  return observer;
 }
 
 export function Reveal({
   children,
   className,
   delay = 0,
-  y = 24,
+  y = 20,
   as = "div",
 }: {
   children: React.ReactNode;
@@ -29,80 +42,112 @@ export function Reveal({
   y?: number;
   as?: "div" | "section" | "li" | "span" | "article";
 }) {
-  const canReveal = useMountedReveal();
-  const Comp = motion[as] as typeof motion.div;
-  if (!canReveal) {
-    return <Comp className={className}>{children}</Comp>;
-  }
+  const ref = React.useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsVisible(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const obs = getObserver();
+    if (!obs) {
+      setIsVisible(true);
+      return;
+    }
+    callbacks.set(el, () => setIsVisible(true));
+    obs.observe(el);
+    return () => {
+      callbacks.delete(el);
+      obs.unobserve(el);
+    };
+  }, []);
+
+  const Comp = as as any;
+
   return (
     <Comp
-      className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, ease: EASE, delay }}
+      ref={ref}
+      className={cn(className, "transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[opacity,transform]")}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "none" : `translateY(${y}px)`,
+        transitionDelay: `${delay}s`,
+      }}
     >
       {children}
     </Comp>
   );
 }
 
+const StaggerContext = React.createContext<{ isVisible: boolean }>({
+  isVisible: false,
+});
+
 export function StaggerGroup({
   children,
   className,
-  stagger = 0.08,
 }: {
   children: React.ReactNode;
   className?: string;
   stagger?: number;
 }) {
-  const canReveal = useMountedReveal();
-  if (!canReveal) {
-    return <div className={className}>{children}</div>;
-  }
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsVisible(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const obs = getObserver();
+    if (!obs) {
+      setIsVisible(true);
+      return;
+    }
+    callbacks.set(el, () => setIsVisible(true));
+    obs.observe(el);
+    return () => {
+      callbacks.delete(el);
+      obs.unobserve(el);
+    };
+  }, []);
+
   return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-80px" }}
-      variants={{
-        hidden: {},
-        show: { transition: { staggerChildren: stagger } },
-      }}
-    >
-      {children}
-    </motion.div>
+    <StaggerContext.Provider value={{ isVisible }}>
+      <div ref={ref} className={className}>
+        {children}
+      </div>
+    </StaggerContext.Provider>
   );
 }
 
 export function StaggerItem({
   children,
   className,
-  y = 24,
+  y = 20,
 }: {
   children: React.ReactNode;
   className?: string;
   y?: number;
 }) {
-  const canReveal = useMountedReveal();
-  if (!canReveal) {
-    return <div className={className}>{children}</div>;
-  }
+  const { isVisible } = React.useContext(StaggerContext);
   return (
-    <motion.div
-      className={className}
-      variants={{
-        hidden: { opacity: 0, y },
-        show: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.5, ease: EASE },
-        },
+    <div
+      className={cn(className, "transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[opacity,transform]")}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "none" : `translateY(${y}px)`,
       }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 

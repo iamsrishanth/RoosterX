@@ -33,20 +33,37 @@ export function EmberHero() {
   React.useEffect(() => {
     const desktop = window.matchMedia("(min-width: 1024px)").matches;
     setIsDesktop(desktop);
-    if (desktop) {
-      // Defer WebGL initialization so hydration and first paint are completely unblocked
+    if (!desktop) {
+      setWebgl(false);
+      return;
+    }
+
+    let timeoutId: ReturnType<typeof setTimeout>;
+    const activate = () => {
+      window.removeEventListener("scroll", activate);
+      window.removeEventListener("pointermove", activate);
+      window.removeEventListener("touchstart", activate);
+      clearTimeout(timeoutId);
       if ("requestIdleCallback" in window) {
         window.requestIdleCallback(() => {
           setWebgl(hasWebGL());
         });
       } else {
-        setTimeout(() => {
-          setWebgl(hasWebGL());
-        }, 150);
+        setWebgl(hasWebGL());
       }
-    } else {
-      setWebgl(false);
-    }
+    };
+
+    window.addEventListener("scroll", activate, { passive: true, once: true });
+    window.addEventListener("pointermove", activate, { passive: true, once: true });
+    window.addEventListener("touchstart", activate, { passive: true, once: true });
+    timeoutId = setTimeout(activate, 2500);
+
+    return () => {
+      window.removeEventListener("scroll", activate);
+      window.removeEventListener("pointermove", activate);
+      window.removeEventListener("touchstart", activate);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   // pause when offscreen
@@ -82,6 +99,7 @@ export function EmberHero() {
           alt=""
           fill
           priority
+          quality={65}
           sizes="(max-width: 768px) 100vw, 1200px"
           className="object-cover object-center opacity-55 mix-blend-screen"
         />

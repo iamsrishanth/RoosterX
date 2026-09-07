@@ -40,44 +40,34 @@ function Hero() {
       <EmberHero />
       <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-[1180px] flex-col justify-center px-5 pt-28 pb-20 sm:px-8">
         <div className="max-w-2xl">
-          <Reveal>
-            <Kicker className="block mb-4">{BRAND.heroKicker}</Kicker>
-          </Reveal>
-          <Reveal delay={0.06}>
-            <h1 className="font-display text-cream text-[clamp(2.75rem,6vw,4.75rem)] leading-[1.02] text-balance text-shadow-soft">
-              {BRAND.heroTitle}
-            </h1>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <p className="mt-6 max-w-xl text-cream text-lg sm:text-xl leading-relaxed drop-shadow-[0_2px_12px_rgba(23,16,11,0.9)]">
-              {BRAND.heroSubtext}
-            </p>
-          </Reveal>
-          <Reveal delay={0.18}>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <FlameButton href={BRAND.orderUrl} target="_blank" rel="noopener noreferrer" size="lg">
-                <Fire size={20} weight="fill" />
-                Order Now
-              </FlameButton>
-              <GhostButton href="/menu" size="lg">
-                View Menu
-                <ArrowRight size={18} weight="bold" />
-              </GhostButton>
-            </div>
-          </Reveal>
-          <Reveal delay={0.24}>
-            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-char/70 px-3 py-1.5 hairline backdrop-blur-sm">
-                <Star size={16} weight="fill" className="text-gold" />
-                <span className="font-bold text-cream">{BRAND.rating}</span>
-                <span className="text-muted-text">from {BRAND.ratingCount} orders</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-char/70 px-3 py-1.5 hairline backdrop-blur-sm text-muted-text">
-                <MapPin size={16} weight="regular" className="text-gold" />
-                {BRAND.branchesCount} branches across {BRAND.statesCount} states
-              </span>
-            </div>
-          </Reveal>
+          <Kicker className="block mb-4">{BRAND.heroKicker}</Kicker>
+          <h1 className="font-display text-cream text-[clamp(2.75rem,6vw,4.75rem)] leading-[1.02] text-balance text-shadow-soft">
+            {BRAND.heroTitle}
+          </h1>
+          <p className="mt-6 max-w-xl text-cream text-lg sm:text-xl leading-relaxed drop-shadow-[0_2px_12px_rgba(23,16,11,0.9)]">
+            {BRAND.heroSubtext}
+          </p>
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <FlameButton href={BRAND.orderUrl} target="_blank" rel="noopener noreferrer" size="lg">
+              <Fire size={20} weight="fill" />
+              Order Now
+            </FlameButton>
+            <GhostButton href="/menu" size="lg">
+              View Menu
+              <ArrowRight size={18} weight="bold" />
+            </GhostButton>
+          </div>
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-char/70 px-3 py-1.5 hairline backdrop-blur-sm">
+              <Star size={16} weight="fill" className="text-gold" />
+              <span className="font-bold text-cream">{BRAND.rating}</span>
+              <span className="text-muted-text">from {BRAND.ratingCount} orders</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-char/70 px-3 py-1.5 hairline backdrop-blur-sm text-muted-text">
+              <MapPin size={16} weight="regular" className="text-gold" />
+              {BRAND.branchesCount} branches across {BRAND.statesCount} states
+            </span>
+          </div>
         </div>
       </div>
       {/* scroll hint */}
@@ -109,7 +99,7 @@ function FeaturedDishCard({
           src={dish.image}
           alt={dish.name}
           fill
-          sizes="(max-width: 640px) 100vw, 50vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
           className="object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-char/80 via-transparent to-transparent sm:hidden" />
@@ -186,7 +176,7 @@ function StandardDishCard({
             src={dish.image}
             alt={dish.name}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
             className="object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
           />
           <span className="absolute left-3 top-3 z-10 rounded-full bg-smoke/80 px-2 py-1 backdrop-blur-sm">
@@ -419,7 +409,7 @@ function StoryTeaser() {
               src="/brand/kitchen-night.jpg"
               alt="RoosterX flame-lit grill kitchen"
               fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
+              sizes="(max-width: 1024px) 100vw, 600px"
               className="object-cover"
             />
             <div
