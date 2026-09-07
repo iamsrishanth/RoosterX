@@ -1,0 +1,238 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   RoosterX - Fire & Ember Design System (dark only)
+   ============================================================ */
+
+@theme inline {
+  /* shadcn semantic tokens (mapped to Fire & Ember) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-outfit);
+  --font-display: var(--font-lalezar);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Brand tokens */
+  --color-smoke: #17100B;
+  --color-ember: #241A11;
+  --color-char: #2A1D13;
+  --color-cream: #F5EDE1;
+  --color-flame: #DC2626;
+  --color-flame-deep: #B91C1C;
+  --color-gold: #F5A623;
+  --color-veg: #2E7D32;
+  --color-muted-text: #B8A995;
+}
+
+/* Dark-only site: values set on :root directly */
+:root {
+  --radius: 18px;
+  --background: #17100B;
+  --foreground: #F5EDE1;
+  --card: #2A1D13;
+  --card-foreground: #F5EDE1;
+  --popover: #2A1D13;
+  --popover-foreground: #F5EDE1;
+  --primary: #DC2626;
+  --primary-foreground: #FFFFFF;
+  --secondary: #241A11;
+  --secondary-foreground: #F5EDE1;
+  --muted: #241A11;
+  --muted-foreground: #B8A995;
+  --accent: #241A11;
+  --accent-foreground: #F5EDE1;
+  --destructive: #B91C1C;
+  --border: rgba(245, 237, 225, 0.1);
+  --input: rgba(245, 237, 225, 0.15);
+  --ring: #DC2626;
+  --chart-1: #DC2626;
+  --chart-2: #F5A623;
+  --chart-3: #B8A995;
+  --chart-4: #2E7D32;
+  --chart-5: #B91C1C;
+  --sidebar: #2A1D13;
+  --sidebar-foreground: #F5EDE1;
+  --sidebar-primary: #DC2626;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #241A11;
+  --sidebar-accent-foreground: #F5EDE1;
+  --sidebar-border: rgba(245, 237, 225, 0.1);
+  --sidebar-ring: #DC2626;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-outfit), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2 {
+    font-family: var(--font-lalezar), system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.05;
+  }
+  ::selection {
+    background: rgba(220, 38, 38, 0.35);
+    color: #F5EDE1;
+  }
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #17100B;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2A1D13;
+    border-radius: 999px;
+    border: 2px solid #17100B;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a2a1c;
+  }
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
+@layer utilities {
+  .font-display {
+    font-family: var(--font-lalezar), system-ui, sans-serif;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  /* Flame glow for hero food edge + primary CTA only */
+  .glow-flame {
+    box-shadow: 0 0 40px 0 rgba(220, 38, 38, 0.35), 0 0 80px 0 rgba(220, 38, 38, 0.15);
+  }
+  .glow-gold {
+    box-shadow: 0 0 36px 0 rgba(245, 166, 35, 0.28);
+  }
+  .glow-soft {
+    box-shadow: 0 8px 24px rgba(23, 16, 11, 0.55);
+  }
+  .glow-lift {
+    box-shadow: 0 14px 34px rgba(23, 16, 11, 0.65);
+  }
+  /* Dotted gold leader (menu rows / price leaders) */
+  .leader-gold {
+    background-image: radial-gradient(circle, rgba(245, 166, 35, 0.5) 1.2px, transparent 1.4px);
+    background-size: 7px 2px;
+    background-repeat: repeat-x;
+    background-position: bottom 0.55em left 0;
+  }
+  /* Ember gradient fallback for hero when WebGL unavailable */
+  .ember-gradient {
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 40%, rgba(220, 38, 38, 0.22), transparent 60%),
+      radial-gradient(ellipse 50% 60% at 30% 70%, rgba(245, 166, 35, 0.16), transparent 65%),
+      linear-gradient(180deg, #1c130c 0%, #17100B 100%);
+  }
+  .hairline {
+    border: 1px solid rgba(245, 237, 225, 0.08);
+  }
+  .text-shadow-soft {
+    text-shadow: 0 2px 20px rgba(23, 16, 11, 0.6);
+  }
+  /* hide scrollbar for pill rows */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+@keyframes rx-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: rx-marquee 60s linear infinite;
+}
+.marquee-pause:hover .animate-marquee,
+.marquee-pause:focus-within .animate-marquee {
+  animation-play-state: paused;
+}
+
+@keyframes rx-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #241A11 0%, #2f2118 50%, #241A11 100%);
+  background-size: 200% 100%;
+  animation: rx-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes rx-ember-flicker {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.ember-flicker {
+  animation: rx-ember-flicker 3.5s ease-in-out infinite;
+}
+
+/* prefers-reduced-motion: disable everything */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-marquee {
+    animation: none !important;
+  }
+}
