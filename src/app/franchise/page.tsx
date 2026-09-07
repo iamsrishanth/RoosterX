@@ -112,16 +112,28 @@ export default function FranchisePage() {
           }
         />
 
-        {/* Proof band */}
+        {/* Proof band - glassmorphism cards with gold glow on the rating */}
         <section className="bg-smoke py-14">
           <div className="mx-auto max-w-[1180px] px-5 sm:px-8">
             <StaggerGroup
               className="grid grid-cols-2 gap-4 lg:grid-cols-4"
               stagger={0.07}
             >
-              {FRANCHISE_PROOF.map((p) => (
+              {FRANCHISE_PROOF.map((p, i) => (
                 <StaggerItem key={p.label}>
-                  <div className="flex h-full flex-col items-center gap-1 rounded-[18px] bg-char hairline p-6 text-center">
+                  <div
+                    className={cn(
+                      "relative flex h-full flex-col items-center gap-1 overflow-hidden rounded-[18px] p-6 text-center backdrop-blur-sm transition-transform duration-300 hover:-translate-y-[2px]",
+                      i === 0
+                        ? "bg-gradient-to-br from-gold/15 to-char border border-gold/40 glow-gold"
+                        : "bg-char/70 border border-cream/10",
+                    )}
+                  >
+                    {i === 0 && (
+                      <span className="absolute right-3 top-3 rounded-full bg-gold/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-gold">
+                        Top rated
+                      </span>
+                    )}
                     <span className="font-sans font-extrabold text-gold text-3xl sm:text-4xl tabular-nums leading-none">
                       {p.value}
                     </span>
@@ -149,14 +161,17 @@ export default function FranchisePage() {
                 const Icon = MODEL_ICONS[i];
                 return (
                   <StaggerItem key={m.title}>
-                    <div className="flex h-full flex-col rounded-[18px] bg-char hairline p-7">
-                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-flame/15 text-flame">
+                    <div className="group relative flex h-full flex-col overflow-hidden rounded-[18px] bg-char border border-cream/10 p-7 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-[3px] hover:border-flame/30 hover:glow-soft">
+                      <span className="absolute right-4 top-4 font-display text-cream/8 text-5xl leading-none select-none">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-flame/15 text-flame transition-colors group-hover:bg-flame group-hover:text-white">
                         <Icon size={24} weight="regular" />
                       </span>
                       <h3 className="mt-5 font-sans font-bold text-cream text-lg leading-snug">
                         {m.title}
                       </h3>
-                      <p className="mt-2 text-muted-text text-sm leading-relaxed">{m.text}</p>
+                      <p className="mt-2 text-muted-text text-sm leading-[1.7]">{m.text}</p>
                     </div>
                   </StaggerItem>
                 );
@@ -367,9 +382,9 @@ function Field({
 
 function inputClass(hasError: boolean) {
   return cn(
-    "w-full rounded-[12px] bg-ember px-4 py-3.5 text-cream placeholder:text-muted-text/60",
+    "w-full rounded-[12px] bg-ember px-4 py-3.5 text-cream placeholder:text-muted-text/70",
     "border transition-[border-color,box-shadow] duration-200",
-    "focus:outline-none focus:ring-2 focus:ring-flame focus:ring-offset-2 focus:ring-offset-smoke",
-    hasError ? "border-flame" : "border-cream/15",
+    "focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold/50 focus:shadow-[0_0_0_4px_rgba(245,166,35,0.12)]",
+    hasError ? "border-flame ring-2 ring-flame/30" : "border-cream/20 hover:border-cream/30",
   );
 }

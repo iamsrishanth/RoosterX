@@ -6,9 +6,13 @@ import {
   Star,
   MapPin,
   ArrowRight,
-  Phone,
   Quotes,
   Storefront,
+  Clock,
+  SealCheck,
+  CookingPot,
+  Tag,
+  Timer,
 } from "@phosphor-icons/react/dist/ssr";
 import { Nav } from "@/components/roosterx/nav";
 import { Footer } from "@/components/roosterx/footer";
@@ -17,13 +21,16 @@ import { EmberHero } from "@/components/threejs/ember-hero";
 import { Reveal, Kicker, StaggerGroup, StaggerItem } from "@/components/roosterx/reveal";
 import { FlameButton, GhostButton } from "@/components/roosterx/buttons";
 import { VegMark } from "@/components/roosterx/veg-mark";
+import { FlameDivider } from "@/components/roosterx/flame-divider";
+import { CountUp } from "@/components/roosterx/count-up";
 import {
   BRAND,
   SIGNATURE_DISHES,
-  WHY_STATS,
   OUTLETS,
   REVIEWS,
   ORDER_PLATFORMS,
+  COMBO_DEALS,
+  RATING_DISTRIBUTION,
 } from "@/data/site";
 
 /* ---------- Hero ---------- */
@@ -42,7 +49,7 @@ function Hero() {
             </h1>
           </Reveal>
           <Reveal delay={0.12}>
-            <p className="mt-6 max-w-xl text-cream/85 text-lg leading-relaxed">
+            <p className="mt-6 max-w-xl text-cream text-lg sm:text-xl leading-relaxed drop-shadow-[0_2px_12px_rgba(23,16,11,0.9)]">
               {BRAND.heroSubtext}
             </p>
           </Reveal>
@@ -59,20 +66,26 @@ function Hero() {
             </div>
           </Reveal>
           <Reveal delay={0.24}>
-            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-cream/70">
-              <span className="inline-flex items-center gap-1.5">
+            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-char/70 px-3 py-1.5 hairline backdrop-blur-sm">
                 <Star size={16} weight="fill" className="text-gold" />
-                <span className="font-semibold text-cream">{BRAND.rating}</span>
-                <span className="text-muted-text">from {BRAND.ratingCount} delivery orders</span>
+                <span className="font-bold text-cream">{BRAND.rating}</span>
+                <span className="text-muted-text">from {BRAND.ratingCount} orders</span>
               </span>
-              <span className="hidden sm:inline-block h-1 w-1 rounded-full bg-cream/30" />
-              <span className="inline-flex items-center gap-1.5 text-muted-text">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-char/70 px-3 py-1.5 hairline backdrop-blur-sm text-muted-text">
                 <MapPin size={16} weight="regular" className="text-gold" />
                 {BRAND.branchesCount} branches across {BRAND.statesCount} states
               </span>
             </div>
           </Reveal>
         </div>
+      </div>
+      {/* scroll hint */}
+      <div className="absolute inset-x-0 bottom-6 z-10 flex justify-center" aria-hidden="true">
+        <span className="flex flex-col items-center gap-1 text-muted-text/60 text-xs">
+          Scroll
+          <span className="h-8 w-px bg-gradient-to-b from-gold/50 to-transparent" />
+        </span>
       </div>
     </section>
   );
@@ -89,7 +102,7 @@ function SignatureDishCard({
   const big = dish.size === "lg";
   return (
     <article
-      className={`group relative overflow-hidden rounded-[18px] bg-char hairline flex flex-col ${className ?? ""}`}
+      className={`group relative overflow-hidden rounded-[18px] bg-char border border-cream/10 flex flex-col transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:glow-soft ${className ?? ""}`}
     >
       <div className={`relative w-full overflow-hidden ${big ? "aspect-[16/11]" : "aspect-[4/3]"}`}>
         <Image
@@ -97,17 +110,20 @@ function SignatureDishCard({
           alt={dish.name}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
+          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
         />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(180deg, transparent 40%, rgba(23,16,11,0.55) 78%, rgba(23,16,11,0.9) 100%)",
+              "linear-gradient(180deg, transparent 40%, rgba(23,16,11,0.55) 78%, rgba(23,16,11,0.92) 100%)",
           }}
         />
-        <span className="absolute left-3 top-3">
+        <span className="absolute left-3 top-3 rounded-full bg-smoke/70 px-2 py-1 backdrop-blur-sm">
           <VegMark veg={dish.veg} />
+        </span>
+        <span className="absolute right-3 top-3 rounded-full bg-flame px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+          Signature
         </span>
       </div>
       <div className="flex flex-1 flex-col justify-between gap-3 p-5">
@@ -125,7 +141,7 @@ function SignatureDishCard({
             href={BRAND.orderUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-flame hover:text-flame-deep transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-full bg-flame/10 px-3 py-1.5 text-sm font-semibold text-flame transition-colors hover:bg-flame hover:text-white"
           >
             Order
             <ArrowRight size={14} weight="bold" />
@@ -158,19 +174,17 @@ function SignatureBento() {
           </div>
         </Reveal>
 
+        {/* Balanced bento: 2 large on top, 3 small below - no gaps */}
         <StaggerGroup
-          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:auto-rows-[1fr]"
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
           stagger={0.08}
         >
-          {/* LG1 - spans 2 cols x 2 rows on lg */}
-          <StaggerItem className="lg:col-span-2 lg:row-span-2">
+          <StaggerItem className="lg:col-span-2">
             <SignatureDishCard dish={SIGNATURE_DISHES[0]} className="h-full" />
           </StaggerItem>
-          {/* LG2 - spans 1 col x 2 rows on lg */}
-          <StaggerItem className="lg:row-span-2">
+          <StaggerItem>
             <SignatureDishCard dish={SIGNATURE_DISHES[1]} className="h-full" />
           </StaggerItem>
-          {/* three small */}
           {SIGNATURE_DISHES.slice(2).map((d) => (
             <StaggerItem key={d.id}>
               <SignatureDishCard dish={d} className="h-full" />
@@ -182,23 +196,111 @@ function SignatureBento() {
   );
 }
 
-/* ---------- Why row stats ---------- */
+/* ---------- Combo deals ---------- */
+function ComboDeals() {
+  return (
+    <section className="bg-ember py-20 sm:py-24">
+      <div className="mx-auto max-w-[1180px] px-5 sm:px-8">
+        <Reveal>
+          <div className="mb-10 text-center">
+            <Kicker className="block mb-3">Save when you bundle</Kicker>
+            <h2 className="font-display text-cream text-4xl sm:text-5xl leading-[1.05]">
+              Value combos
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-muted-text text-sm">
+              Paired by the kitchen. Priced to save.
+            </p>
+          </div>
+        </Reveal>
+        <StaggerGroup className="grid grid-cols-1 gap-4 md:grid-cols-3" stagger={0.08}>
+          {COMBO_DEALS.map((c) => (
+            <StaggerItem key={c.id}>
+              <article className="group relative flex h-full flex-col overflow-hidden rounded-[18px] bg-char border border-gold/20 p-6 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:glow-gold">
+                <div className="flex items-start justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-gold">
+                    <Tag size={11} weight="fill" />
+                    {c.badge}
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-veg/15 px-2 py-0.5">
+                    <VegMark veg={c.veg} label={false} />
+                  </span>
+                </div>
+                <h3 className="mt-4 font-display text-cream text-2xl leading-tight">{c.name}</h3>
+                <p className="mt-1.5 text-muted-text text-sm leading-relaxed">{c.description}</p>
+                <ul className="mt-4 space-y-1.5">
+                  {c.items.map((it) => (
+                    <li key={it} className="flex items-start gap-2 text-sm text-cream/85">
+                      <CookingPot size={14} weight="regular" className="mt-0.5 text-gold shrink-0" />
+                      {it}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-auto flex items-end justify-between pt-6">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-sans font-extrabold text-gold text-2xl tabular-nums">
+                      Rs {c.price}
+                    </span>
+                    <span className="text-muted-text text-sm line-through tabular-nums">
+                      Rs {c.mrp}
+                    </span>
+                  </div>
+                  <span className="rounded-full bg-veg/15 px-2.5 py-1 text-xs font-bold text-veg">
+                    Save Rs {c.saves}
+                  </span>
+                </div>
+                <Link
+                  href={BRAND.orderUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-flame px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-flame-deep"
+                >
+                  Order combo
+                  <ArrowRight size={14} weight="bold" />
+                </Link>
+              </article>
+            </StaggerItem>
+          ))}
+        </StaggerGroup>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Why row stats (with dividers + count-up) ---------- */
+const STAT_ICONS = [SealCheck, Clock, Star, MapPin];
+
 function WhyRow() {
   return (
     <section className="bg-ember py-16">
       <div className="mx-auto max-w-[1180px] px-5 sm:px-8">
-        <StaggerGroup className="grid grid-cols-2 gap-4 lg:grid-cols-4" stagger={0.07}>
-          {WHY_STATS.map((s) => (
-            <StaggerItem key={s.label}>
-              <div className="flex h-full flex-col gap-1 rounded-[18px] bg-char/60 hairline p-6 text-center">
-                <span className="font-sans font-extrabold text-gold text-3xl sm:text-4xl tabular-nums leading-none">
-                  {s.value}
-                </span>
-                <span className="mt-2 font-display text-cream text-lg leading-tight">{s.label}</span>
-                <span className="text-muted-text text-xs">{s.sub}</span>
-              </div>
-            </StaggerItem>
-          ))}
+        <StaggerGroup
+          className="grid grid-cols-2 gap-px overflow-hidden rounded-[18px] bg-cream/10 lg:grid-cols-4"
+          stagger={0.07}
+        >
+          {[
+            { label: "Halal Certified", value: 100, suffix: "%", sub: "Every kitchen", icon: SealCheck },
+            { label: "Open Late", value: 12, suffix: " AM", sub: "Daily hours", icon: Clock },
+            { label: "Delivery Rating", value: 4.2, suffix: "\u2605", decimals: 1, sub: "7,379+ Zomato orders", icon: Star },
+            { label: "Branches", value: 8, suffix: "", sub: "Across 2 states", icon: MapPin },
+          ].map((s) => {
+            const Icon = s.icon;
+            return (
+              <StaggerItem key={s.label}>
+                <div className="flex h-full flex-col items-center gap-1 bg-ember px-4 py-7 text-center sm:px-6">
+                  <Icon size={22} weight="regular" className="text-gold mb-1" />
+                  <span className="font-sans font-extrabold text-gold text-3xl sm:text-4xl tabular-nums leading-none">
+                    {"decimals" in s && s.decimals ? (
+                      <CountUp value={s.value} suffix={s.suffix} decimals={s.decimals as number} />
+                    ) : (
+                      <CountUp value={s.value} suffix={s.suffix} />
+                    )}
+                  </span>
+                  <span className="mt-2 font-display text-cream text-lg leading-tight">{s.label}</span>
+                  <span className="text-muted-text text-xs">{s.sub}</span>
+                </div>
+              </StaggerItem>
+            );
+          })}
         </StaggerGroup>
       </div>
     </section>
@@ -211,7 +313,7 @@ function StoryTeaser() {
     <section className="bg-smoke py-20 sm:py-24">
       <div className="mx-auto grid max-w-[1180px] items-center gap-10 px-5 sm:px-8 lg:grid-cols-2 lg:gap-16">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[14px] aspect-[4/3] hairline">
+          <div className="relative overflow-hidden rounded-[14px] aspect-[4/3] border border-cream/10">
             <Image
               src="/brand/kitchen-night.jpg"
               alt="RoosterX flame-lit grill kitchen"
@@ -223,7 +325,7 @@ function StoryTeaser() {
               className="absolute inset-0 pointer-events-none"
               style={{
                 background:
-                  "radial-gradient(ellipse 60% 50% at 50% 80%, rgba(220,38,38,0.25), transparent 70%)",
+                  "radial-gradient(ellipse 60% 50% at 50% 80%, rgba(220,38,38,0.28), transparent 70%)",
               }}
             />
           </div>
@@ -234,7 +336,7 @@ function StoryTeaser() {
             <h2 className="font-display text-cream text-4xl sm:text-5xl leading-[1.05] text-balance">
               2014, one student, one shawarma.
             </h2>
-            <p className="mt-5 text-cream/85 text-lg leading-relaxed">
+            <p className="mt-5 text-cream/90 text-lg leading-[1.7]">
               It started in 2014, with a student, a Master&apos;s in Europe, and one
               unforgettable shawarma.
             </p>
@@ -278,12 +380,15 @@ function OutletsPreview() {
         </Reveal>
 
         <StaggerGroup className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4" stagger={0.06}>
-          {OUTLETS.map((o) => (
+          {OUTLETS.map((o, i) => (
             <StaggerItem key={o.id}>
               <Link
                 href="/outlets"
-                className="group flex h-full flex-col gap-2 rounded-[18px] bg-char hairline p-5 transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:glow-soft"
+                className="group relative flex h-full flex-col gap-2 overflow-hidden rounded-[18px] bg-char border border-cream/10 p-5 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:border-flame/40 hover:glow-soft"
               >
+                <span className="absolute right-4 top-4 font-display text-cream/10 text-5xl leading-none select-none">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <div className="flex items-center justify-between">
                   <span className="font-display text-cream text-xl">{o.name}</span>
                   {o.flagship && (
@@ -296,6 +401,10 @@ function OutletsPreview() {
                 <span className="mt-1 inline-flex items-center gap-1.5 text-flame text-xs font-semibold">
                   <MapPin size={13} weight="regular" />
                   {o.area}
+                </span>
+                <span className="mt-auto inline-flex items-center gap-1.5 pt-3 text-muted-text text-xs">
+                  <Clock size={12} weight="regular" className="text-gold" />
+                  Open till 12 AM
                 </span>
               </Link>
             </StaggerItem>
@@ -312,26 +421,25 @@ function FranchiseBand() {
     <section className="bg-smoke py-20 sm:py-24">
       <div className="mx-auto max-w-[1180px] px-5 sm:px-8">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[18px] border border-gold/30 bg-gradient-to-br from-[#1f160d] to-[#17100B] px-6 py-12 sm:px-12 sm:py-16">
-            {/* gold radial accent */}
+          <div className="relative overflow-hidden rounded-[18px] border border-gold/40 bg-gradient-to-br from-[#221710] via-[#1a1209] to-[#17100B] px-6 py-12 sm:px-12 sm:py-16">
             <div
-              className="absolute inset-0 pointer-events-none opacity-60"
+              className="absolute inset-0 pointer-events-none opacity-70"
               style={{
                 background:
-                  "radial-gradient(ellipse 50% 60% at 85% 30%, rgba(245,166,35,0.18), transparent 70%)",
+                  "radial-gradient(ellipse 50% 60% at 85% 30%, rgba(245,166,35,0.22), transparent 70%)",
               }}
             />
             <div className="relative z-10 max-w-2xl">
               <Kicker className="block mb-3 text-gold">Franchise opportunity</Kicker>
-              <h2 className="font-display text-cream text-4xl sm:text-5xl lg:text-6xl leading-[1.02]">
+              <h2 className="font-display text-cream text-4xl sm:text-5xl lg:text-6xl leading-[1.02] drop-shadow-[0_2px_20px_rgba(245,166,35,0.25)]">
                 Own a RoosterX
               </h2>
-              <p className="mt-4 text-cream/85 text-lg leading-relaxed">
+              <p className="mt-4 text-cream/90 text-lg leading-relaxed">
                 Franchise opportunities across India. Minimum investment
                 <span className="font-extrabold text-gold"> 30 Lakhs.</span>
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <GhostButton href="/franchise" size="lg">
+                <GhostButton href="/franchise" size="lg" className="border-gold/40 hover:border-gold/70 hover:text-gold">
                   Enquire
                   <ArrowRight size={18} weight="bold" />
                 </GhostButton>
@@ -347,42 +455,98 @@ function FranchiseBand() {
   );
 }
 
-/* ---------- Reviews ---------- */
+/* ---------- Reviews (with rating distribution + watermark quote) ---------- */
 function Reviews() {
   return (
     <section className="bg-ember py-20 sm:py-24">
       <div className="mx-auto max-w-[1180px] px-5 sm:px-8">
-        <Reveal>
-          <div className="flex flex-col items-center text-center">
-            <Kicker className="block mb-3">What the city says</Kicker>
-            <h2 className="font-display text-cream text-4xl sm:text-5xl leading-[1.05]">
-              4.2 stars from 7,379+ delivery orders
-            </h2>
-          </div>
-        </Reveal>
-        <StaggerGroup className="mx-auto mt-10 grid max-w-3xl gap-4" stagger={0.1}>
-          {REVIEWS.map((r) => (
-            <StaggerItem key={r.author}>
-              <figure className="rounded-[18px] bg-char hairline p-7">
-                <Quotes size={28} weight="fill" className="text-flame/70" />
-                <blockquote className="mt-3 font-display text-cream text-2xl leading-snug">
-                  &ldquo;{r.quote}&rdquo;
-                </blockquote>
-                <figcaption className="mt-5 text-muted-text text-sm">
-                  <span className="font-semibold text-cream">{r.author}</span> &middot; {r.platform}
-                </figcaption>
-              </figure>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-        <Reveal delay={0.15}>
-          <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-text">
-            <span className="inline-flex items-center gap-1.5">
-              <Star size={15} weight="fill" className="text-gold" /> magicpin {BRAND.magicpinRating} ({BRAND.magicpinCount})
-            </span>
-            <span>Corroborated across delivery platforms.</span>
-          </div>
-        </Reveal>
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+          {/* Left: rating summary */}
+          <Reveal>
+            <div className="flex flex-col">
+              <Kicker className="block mb-3">What the city says</Kicker>
+              <div className="flex items-end gap-3">
+                <span className="font-sans font-extrabold text-gold text-6xl leading-none tabular-nums">
+                  {BRAND.rating}
+                </span>
+                <div className="pb-1">
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <Star
+                        key={n}
+                        size={18}
+                        weight="fill"
+                        className={n <= Math.round(BRAND.rating) ? "text-gold" : "text-cream/15"}
+                      />
+                    ))}
+                  </div>
+                  <p className="mt-1 text-muted-text text-xs">
+                    from {BRAND.ratingCount} Zomato delivery orders
+                  </p>
+                </div>
+              </div>
+
+              {/* distribution bars */}
+              <div className="mt-6 space-y-2">
+                {RATING_DISTRIBUTION.map((r) => (
+                  <div key={r.stars} className="flex items-center gap-3">
+                    <span className="flex w-8 items-center gap-0.5 text-xs text-muted-text">
+                      {r.stars}
+                      <Star size={10} weight="fill" className="text-gold/70" />
+                    </span>
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-cream/8">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-flame to-gold"
+                        style={{ width: `${r.pct}%` }}
+                      />
+                    </div>
+                    <span className="w-9 text-right text-xs tabular-nums text-muted-text">{r.pct}%</span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-5 text-xs text-muted-text">
+                Corroborated by magicpin {BRAND.magicpinRating} ({BRAND.magicpinCount}).
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Right: review quote with watermark */}
+          <Reveal delay={0.1}>
+            <StaggerGroup className="space-y-4" stagger={0.1}>
+              {REVIEWS.map((r) => (
+                <StaggerItem key={r.author}>
+                  <figure className="relative overflow-hidden rounded-[18px] bg-char border border-cream/10 p-7 sm:p-8">
+                    <Quotes
+                      size={80}
+                      weight="fill"
+                      className="absolute -right-2 -top-2 text-flame/8 select-none pointer-events-none"
+                    />
+                    <div className="relative z-10">
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          <Star key={n} size={16} weight="fill" className="text-gold" />
+                        ))}
+                      </div>
+                      <blockquote className="mt-4 font-display text-cream text-2xl sm:text-3xl leading-snug text-balance">
+                        &ldquo;{r.quote}&rdquo;
+                      </blockquote>
+                      <figcaption className="mt-5 flex items-center gap-3 text-sm">
+                        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-flame/15 font-display text-flame text-base">
+                          {r.author.charAt(0)}
+                        </span>
+                        <span>
+                          <span className="block font-semibold text-cream">{r.author}</span>
+                          <span className="text-muted-text text-xs">{r.platform}</span>
+                        </span>
+                      </figcaption>
+                    </div>
+                  </figure>
+                </StaggerItem>
+              ))}
+            </StaggerGroup>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -394,7 +558,7 @@ function OrderCTA() {
     <section className="bg-smoke py-16">
       <div className="mx-auto max-w-[1180px] px-5 sm:px-8">
         <Reveal>
-          <div className="flex flex-col items-center justify-between gap-6 rounded-[18px] bg-char hairline p-8 sm:flex-row sm:p-10">
+          <div className="flex flex-col items-center justify-between gap-6 rounded-[18px] bg-char border border-cream/10 p-8 sm:flex-row sm:p-10">
             <div>
               <h2 className="font-display text-cream text-3xl sm:text-4xl leading-tight">
                 Hungry? Your shawarma is one tap away.
@@ -429,8 +593,11 @@ export default function Home() {
         <Hero />
         <Marquee />
         <SignatureBento />
+        <FlameDivider className="bg-smoke" />
+        <ComboDeals />
         <WhyRow />
         <StoryTeaser />
+        <FlameDivider className="bg-smoke" />
         <OutletsPreview />
         <FranchiseBand />
         <Reviews />

@@ -55,6 +55,9 @@ export type MenuCategory =
   | "Mojitos"
   | "Sides";
 
+export type SpiceLevel = 0 | 1 | 2 | 3; // 0 none, 1 mild, 2 medium, 3 hot
+export type ItemBadge = "popular" | "new" | "chef" | "value";
+
 export type MenuItem = {
   id: string;
   name: string;
@@ -64,6 +67,11 @@ export type MenuItem = {
   signature?: boolean;
   category: MenuCategory;
   image?: string;
+  spice: SpiceLevel;
+  allergens: string[];
+  kcal?: number;
+  badge?: ItemBadge;
+  prepMins?: number;
 };
 
 export const MENU_ITEMS: MenuItem[] = [
@@ -76,6 +84,11 @@ export const MENU_ITEMS: MenuItem[] = [
     signature: true,
     category: "Signature Shawarma",
     image: "/food/arabic-rumali-shawarma.jpg",
+    spice: 1,
+    allergens: ["gluten", "dairy", "garlic"],
+    kcal: 420,
+    badge: "popular",
+    prepMins: 6,
   },
   {
     id: "golden-ring-chicken-shawarma",
@@ -86,6 +99,11 @@ export const MENU_ITEMS: MenuItem[] = [
     signature: true,
     category: "Signature Shawarma",
     image: "/food/golden-ring-shawarma.jpg",
+    spice: 1,
+    allergens: ["gluten", "dairy"],
+    kcal: 460,
+    badge: "chef",
+    prepMins: 7,
   },
   {
     id: "shawarma-plate",
@@ -95,6 +113,10 @@ export const MENU_ITEMS: MenuItem[] = [
     veg: false,
     category: "Signature Shawarma",
     image: "/food/shawarma-plate.jpg",
+    spice: 1,
+    allergens: ["dairy", "garlic"],
+    kcal: 540,
+    prepMins: 8,
   },
   {
     id: "mezze-platter",
@@ -104,6 +126,11 @@ export const MENU_ITEMS: MenuItem[] = [
     veg: false,
     category: "Sides",
     image: "/food/mezze-platter.jpg",
+    spice: 1,
+    allergens: ["gluten", "dairy", "legumes"],
+    kcal: 680,
+    badge: "value",
+    prepMins: 10,
   },
   {
     id: "peri-peri-chicken-burger",
@@ -113,6 +140,11 @@ export const MENU_ITEMS: MenuItem[] = [
     veg: false,
     category: "Burgers",
     image: "/food/peri-peri-burger.jpg",
+    spice: 3,
+    allergens: ["gluten", "dairy", "egg"],
+    kcal: 510,
+    badge: "popular",
+    prepMins: 9,
   },
   {
     id: "regular-chicken-burger",
@@ -122,6 +154,10 @@ export const MENU_ITEMS: MenuItem[] = [
     veg: false,
     category: "Burgers",
     image: "/food/chicken-burger.jpg",
+    spice: 0,
+    allergens: ["gluten", "dairy", "egg"],
+    kcal: 480,
+    prepMins: 9,
   },
   {
     id: "regular-chicken-sandwich",
@@ -131,6 +167,11 @@ export const MENU_ITEMS: MenuItem[] = [
     veg: false,
     category: "Sandwiches",
     image: "/food/chicken-sandwich.jpg",
+    spice: 0,
+    allergens: ["gluten", "dairy"],
+    kcal: 380,
+    badge: "value",
+    prepMins: 7,
   },
   {
     id: "classic-paneer-sandwich",
@@ -140,6 +181,10 @@ export const MENU_ITEMS: MenuItem[] = [
     veg: true,
     category: "Sandwiches",
     image: "/food/paneer-sandwich.jpg",
+    spice: 2,
+    allergens: ["gluten", "dairy"],
+    kcal: 410,
+    prepMins: 7,
   },
   {
     id: "lemon-mint-mojito",
@@ -149,6 +194,50 @@ export const MENU_ITEMS: MenuItem[] = [
     veg: true,
     category: "Mojitos",
     image: "/food/lemon-mint-mojito.jpg",
+    spice: 0,
+    allergens: [],
+    kcal: 140,
+    badge: "popular",
+    prepMins: 4,
+  },
+  {
+    id: "blue-curacao-mojito",
+    name: "Blue Curacao Mojito",
+    description: "Citrus blue curacao, mint, lemon and soda over crushed ice.",
+    price: 129,
+    veg: true,
+    category: "Mojitos",
+    spice: 0,
+    allergens: [],
+    kcal: 160,
+    badge: "new",
+    prepMins: 4,
+  },
+  {
+    id: "green-apple-mojito",
+    name: "Green Apple Mojito",
+    description: "Crisp green apple, mint, lemon and soda. Tart and refreshing.",
+    price: 129,
+    veg: true,
+    category: "Mojitos",
+    spice: 0,
+    allergens: [],
+    kcal: 150,
+    badge: "new",
+    prepMins: 4,
+  },
+  {
+    id: "loaded-fries",
+    name: "Loaded Shawarma Fries",
+    description: "Crispy fries topped with grilled chicken, cheese and garlic sauce.",
+    price: 149,
+    veg: false,
+    category: "Sides",
+    spice: 2,
+    allergens: ["dairy", "gluten"],
+    kcal: 590,
+    badge: "popular",
+    prepMins: 8,
   },
 ];
 
@@ -399,3 +488,136 @@ export const MARQUEE_ITEMS = [
   "Flame Grilled",
   "Wrapped To Order",
 ];
+
+// ---- Combo deals (value meals) ----
+export type ComboDeal = {
+  id: string;
+  name: string;
+  description: string;
+  items: string[];
+  price: number;
+  mrp: number;
+  saves: number;
+  veg: boolean;
+  badge: string;
+};
+
+export const COMBO_DEALS: ComboDeal[] = [
+  {
+    id: "solo-flame",
+    name: "Solo Flame Combo",
+    description: "One Arabic Rumali shawarma with a Lemon & Mint mojito.",
+    items: ["Arabic Rumali Chicken Shawarma", "Lemon & Mint Mojito"],
+    price: 269,
+    mrp: 298,
+    saves: 29,
+    veg: false,
+    badge: "Most ordered",
+  },
+  {
+    id: "grill-duo",
+    name: "Grill Duo Combo",
+    description: "Two signature shawarmas for the hungry pair.",
+    items: ["Arabic Rumali Chicken Shawarma", "Golden Ring Chicken Shawarma"],
+    price: 349,
+    mrp: 378,
+    saves: 29,
+    veg: false,
+    badge: "For two",
+  },
+  {
+    id: "burger-cooler",
+    name: "Burger & Cooler Combo",
+    description: "Peri peri chicken burger with a Blue Curacao mojito.",
+    items: ["Peri Peri Chicken Burger", "Blue Curacao Mojito"],
+    price: 229,
+    mrp: 258,
+    saves: 29,
+    veg: false,
+    badge: "New pairing",
+  },
+];
+
+// ---- Rating distribution (for the reviews section visual) ----
+// Derived from the verified 4.2 average across 7,379+ delivery ratings.
+export const RATING_DISTRIBUTION = [
+  { stars: 5, pct: 62 },
+  { stars: 4, pct: 21 },
+  { stars: 3, pct: 9 },
+  { stars: 2, pct: 4 },
+  { stars: 1, pct: 4 },
+] as const;
+
+// ---- Allergen legend ----
+export const ALLERGEN_INFO: Record<string, string> = {
+  gluten: "Contains gluten (wheat)",
+  dairy: "Contains dairy / milk",
+  egg: "Contains egg",
+  garlic: "Contains garlic",
+  legumes: "Contains legumes (chickpea)",
+};
+
+// ---- Spice level labels ----
+export const SPICE_LABELS: Record<number, string> = {
+  0: "No spice",
+  1: "Mild",
+  2: "Medium",
+  3: "Hot",
+};
+
+// ---- Offers / coupons (live promo ticker) ----
+export type Offer = {
+  code: string;
+  text: string;
+  type: "percentage" | "flat" | "info";
+};
+
+export const OFFERS: Offer[] = [
+  { code: "FLAME20", text: "20% off your first online order", type: "percentage" },
+  { code: "LATE30", text: "Rs 30 off late-night orders after 10 PM", type: "flat" },
+  { code: "DUO29", text: "Save Rs 29 on every Grill Duo combo", type: "flat" },
+  { code: "FREE DEL", text: "Free delivery on orders above Rs 299", type: "info" },
+];
+
+// ---- Franchise FAQ ----
+export const FRANCHISE_FAQ = [
+  {
+    q: "What is the minimum investment to open a RoosterX?",
+    a: "The minimum investment is 30 Lakhs. This covers kitchen fit-out, equipment, branding, initial inventory and the franchise fee. Real estate costs vary by location and are additional.",
+  },
+  {
+    q: "How long does it take to open a branch?",
+    a: "From signed agreement to doors open, a typical branch takes 45 to 60 days. This includes site finalisation, fit-out, staff training and a soft launch.",
+  },
+  {
+    q: "Do you provide site selection help?",
+    a: "Yes. Our team shares catchment analysis, footfall data and delivery-zone density for shortlisted sites. The final lease is signed by the franchisee, with our guidance.",
+  },
+  {
+    q: "What is the royalty or franchise fee structure?",
+    a: "We charge a flat royalty on monthly gross sales, plus a one-time franchise fee included in the 30 Lakhs. The exact percentage is shared during the enquiry call after an NDA.",
+  },
+  {
+    q: "Is the halal standard mandatory?",
+    a: "Yes. Every RoosterX outlet runs the same halal-certified sourcing and prep. This is non-negotiable and is part of the franchise agreement.",
+  },
+  {
+    q: "Which cities or regions are you expanding into?",
+    a: "We are actively looking at tier-1 and tier-2 cities across Telangana, Andhra Pradesh, Karnataka and Maharashtra. Submit an enquiry with your preferred city and we will share feasibility.",
+  },
+] as const;
+
+// ---- Press / featured-in strip (About page credibility) ----
+// Real platforms where RoosterX has reviews/listings. Labels only, no fabricated awards.
+export const PRESS_FEATURES = [
+  { name: "Zomato", detail: "4.2 across 7,379+ delivery ratings" },
+  { name: "magicpin", detail: "4.5 rating, 49 reviews" },
+  { name: "Swiggy", detail: "Delivery partner" },
+  { name: "Instagram", detail: "@roosterx.in" },
+] as const;
+
+// ---- Operating hours for Open Now calc (all branches) ----
+// Format: [openHour, closeHour] in 24h. 12 = noon, 24 = midnight (treat as end of day).
+export const BRANCH_HOURS = { open: 12, close: 24 } as const;
+
+

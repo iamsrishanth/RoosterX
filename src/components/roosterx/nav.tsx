@@ -64,21 +64,30 @@ export function Nav() {
 
           {/* Center links - desktop */}
           <ul className="hidden items-center gap-1 md:flex">
-            {NAV_LINKS.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className={cn(
-                    "rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200",
-                    isActive(l.href)
-                      ? "text-flame"
-                      : "text-cream/80 hover:text-cream",
-                  )}
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
+            {NAV_LINKS.map((l) => {
+              const active = isActive(l.href);
+              return (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className={cn(
+                      "group relative rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200",
+                      active ? "text-flame" : "text-cream/80 hover:text-cream",
+                    )}
+                  >
+                    {l.label}
+                    <span
+                      className={cn(
+                        "absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-flame transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                        active
+                          ? "scale-x-100 opacity-100"
+                          : "scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100",
+                      )}
+                    />
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Right: Order Now + hamburger */}

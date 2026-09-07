@@ -89,8 +89,8 @@ export const GhostButton = React.forwardRef<
 ) {
   const cls = cn(
     "inline-flex items-center justify-center gap-2 rounded-full bg-char font-bold text-cream",
-    "hairline transition-[transform,box-shadow,background-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
-    "hover:bg-[#33220f] hover:-translate-y-[3px] hover:glow-soft",
+    "border border-cream/15 transition-[transform,box-shadow,background-color,border-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
+    "hover:bg-[#33220f] hover:border-cream/30 hover:-translate-y-[3px] hover:glow-soft",
     "active:translate-y-0 active:scale-[0.98]",
     "disabled:opacity-50 disabled:pointer-events-none",
     sizeMap[size],

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lalezar, Outfit } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { ScrollToTop } from "@/components/roosterx/scroll-to-top";
 
 const lalezar = Lalezar({
   subsets: ["latin"],
@@ -61,6 +62,7 @@ export default function RootLayout({
       >
         {children}
         <Toaster />
+        <ScrollToTop />
       </body>
     </html>
   );
