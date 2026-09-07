@@ -38,12 +38,13 @@ export function EmberHero() {
       return;
     }
 
-    let timeoutId: ReturnType<typeof setTimeout>;
+    let active = false;
     const activate = () => {
+      if (active) return;
+      active = true;
       window.removeEventListener("scroll", activate);
       window.removeEventListener("pointermove", activate);
       window.removeEventListener("touchstart", activate);
-      clearTimeout(timeoutId);
       if ("requestIdleCallback" in window) {
         window.requestIdleCallback(() => {
           setWebgl(hasWebGL());
@@ -56,13 +57,11 @@ export function EmberHero() {
     window.addEventListener("scroll", activate, { passive: true, once: true });
     window.addEventListener("pointermove", activate, { passive: true, once: true });
     window.addEventListener("touchstart", activate, { passive: true, once: true });
-    timeoutId = setTimeout(activate, 2500);
 
     return () => {
       window.removeEventListener("scroll", activate);
       window.removeEventListener("pointermove", activate);
       window.removeEventListener("touchstart", activate);
-      clearTimeout(timeoutId);
     };
   }, []);
 

@@ -3,18 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { List, X } from "@phosphor-icons/react/dist/ssr";
 import { BRAND, NAV_LINKS } from "@/data/site";
 import { cn } from "@/lib/utils";
-
-const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
-  const reduce = useReducedMotion();
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -62,7 +58,7 @@ export function Nav() {
             Rooster<span className="text-flame">X</span>
           </Link>
 
-          {/* Center links - desktop */}
+          {/* Desktop links */}
           <ul className="hidden items-center gap-1 md:flex">
             {NAV_LINKS.map((l) => {
               const active = isActive(l.href);
@@ -71,32 +67,29 @@ export function Nav() {
                   <Link
                     href={l.href}
                     className={cn(
-                      "group relative rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200",
-                      active ? "text-flame" : "text-cream/80 hover:text-cream",
+                      "relative rounded-full px-4 py-1.5 text-sm font-semibold transition-colors duration-200",
+                      active
+                        ? "text-gold"
+                        : "text-muted-text hover:text-cream",
                     )}
                   >
                     {l.label}
-                    <span
-                      className={cn(
-                        "absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-flame transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                        active
-                          ? "scale-x-100 opacity-100"
-                          : "scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100",
-                      )}
-                    />
+                    {active && (
+                      <span className="absolute inset-0 rounded-full bg-gold/10 hairline" />
+                    )}
                   </Link>
                 </li>
               );
             })}
           </ul>
 
-          {/* Right: Order Now + hamburger */}
+          {/* Actions */}
           <div className="flex items-center gap-2">
             <Link
               href={BRAND.orderUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden rounded-full bg-flame px-5 py-2.5 text-sm font-bold text-white transition-[transform,background-color] duration-200 hover:bg-flame-deep hover:-translate-y-[2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-flame focus-visible:ring-offset-2 focus-visible:ring-offset-smoke sm:inline-flex"
+              className="hidden sm:inline-flex items-center rounded-full bg-flame px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-flame-deep"
             >
               Order Now
             </Link>
@@ -114,53 +107,40 @@ export function Nav() {
       </div>
 
       {/* Mobile full-screen overlay */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="fixed inset-0 z-40 ember-gradient md:hidden"
-            initial={reduce ? undefined : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={reduce ? undefined : { opacity: 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-          >
-            <div className="flex h-full flex-col items-center justify-center gap-2 px-6">
-              <span className="font-display text-flame uppercase tracking-[0.22em] text-lg mb-4">
-                The Arabian Fusion
-              </span>
-              {NAV_LINKS.map((l, i) => (
-                <motion.div
-                  key={l.href}
-                  initial={reduce ? undefined : { opacity: 0, y: 20 }}
-                  animate={reduce ? undefined : { opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: EASE, delay: 0.06 * i + 0.1 }}
-                >
-                  <Link
-                    href={l.href}
-                    className="font-display text-cream text-4xl py-2 hover:text-flame transition-colors"
-                  >
-                    {l.label}
-                  </Link>
-                </motion.div>
-              ))}
-              <motion.div
-                initial={reduce ? undefined : { opacity: 0, y: 20 }}
-                animate={reduce ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: EASE, delay: 0.06 * NAV_LINKS.length + 0.15 }}
-                className="mt-8"
-              >
-                <Link
-                  href={BRAND.orderUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center rounded-full bg-flame px-8 py-4 font-bold text-white text-lg hover:bg-flame-deep transition-colors"
-                >
-                  Order Now
-                </Link>
-              </motion.div>
-            </div>
-          </motion.div>
+      <div
+        className={cn(
+          "fixed inset-0 z-40 ember-gradient md:hidden transition-all duration-300",
+          open
+            ? "opacity-100 pointer-events-auto visible"
+            : "opacity-0 pointer-events-none invisible",
         )}
-      </AnimatePresence>
+      >
+        <div className="flex h-full flex-col items-center justify-center gap-2 px-6">
+          <span className="font-display text-flame uppercase tracking-[0.22em] text-lg mb-4">
+            The Arabian Fusion
+          </span>
+          {NAV_LINKS.map((l) => (
+            <div key={l.href}>
+              <Link
+                href={l.href}
+                className="font-display text-cream text-4xl py-2 hover:text-flame transition-colors block text-center"
+              >
+                {l.label}
+              </Link>
+            </div>
+          ))}
+          <div className="mt-8">
+            <Link
+              href={BRAND.orderUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full bg-flame px-8 py-4 font-bold text-white text-lg hover:bg-flame-deep transition-colors"
+            >
+              Order Now
+            </Link>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

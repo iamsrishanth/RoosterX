@@ -114,7 +114,7 @@ function FeaturedDishCard({
       {/* Content Container */}
       <div className="flex flex-1 flex-col justify-between p-6 sm:p-7 gap-4">
         <div>
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-flame">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#FF5722]">
             Bestseller Wrap
           </span>
           <h3 className="mt-1.5 font-sans font-bold text-cream text-2xl sm:text-3xl leading-tight group-hover:text-gold transition-colors">
@@ -477,7 +477,7 @@ function OutletsPreview() {
                 href="/outlets"
                 className="group relative flex h-full flex-col gap-2 overflow-hidden rounded-[18px] bg-char border border-cream/10 p-5 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:border-flame/40 hover:glow-soft"
               >
-                <span className="absolute right-4 top-4 font-display text-cream/10 text-5xl leading-none select-none" aria-hidden="true">
+                <span className="absolute right-4 top-4 font-display text-cream/35 text-5xl leading-none select-none" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex items-center justify-between">
