@@ -3,7 +3,6 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useReducedMotion } from "framer-motion";
 
 const EmberScene = dynamic(() => import("./ember-scene"), {
   ssr: false,
@@ -23,7 +22,7 @@ function hasWebGL(): boolean {
 }
 
 export function EmberHero() {
-  const reduce = useReducedMotion();
+  const [reduce, setReduce] = React.useState(false);
   const [webgl, setWebgl] = React.useState<boolean | null>(null);
   const [inView, setInView] = React.useState(false);
   const [isDesktop, setIsDesktop] = React.useState(false);
@@ -31,6 +30,7 @@ export function EmberHero() {
 
   // detect WebGL + device type on mount
   React.useEffect(() => {
+    setReduce(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     const desktop = window.matchMedia("(min-width: 1024px)").matches;
     setIsDesktop(desktop);
     if (!desktop) {

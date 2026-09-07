@@ -207,7 +207,7 @@ function StandardDishCard({
           href={BRAND.orderUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-full bg-flame/10 px-3 py-1.5 text-sm font-semibold text-flame transition-colors hover:bg-flame hover:text-white"
+          className="inline-flex items-center gap-1.5 rounded-full bg-flame px-3.5 py-1.5 text-xs font-bold text-white transition-colors hover:bg-flame-deep shadow-sm"
         >
           Order
           <ArrowRight size={14} weight="bold" />
@@ -477,7 +477,7 @@ function OutletsPreview() {
                 href="/outlets"
                 className="group relative flex h-full flex-col gap-2 overflow-hidden rounded-[18px] bg-char border border-cream/10 p-5 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[3px] hover:border-flame/40 hover:glow-soft"
               >
-                <span className="absolute right-4 top-4 font-display text-cream/10 text-5xl leading-none select-none">
+                <span className="absolute right-4 top-4 font-display text-cream/10 text-5xl leading-none select-none" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex items-center justify-between">
@@ -489,7 +489,7 @@ function OutletsPreview() {
                   )}
                 </div>
                 <span className="text-muted-text text-xs">{o.city}, {o.state}</span>
-                <span className="mt-1 inline-flex items-center gap-1.5 text-flame text-xs font-semibold">
+                <span className="mt-1 inline-flex items-center gap-1.5 text-[#FF5722] text-xs font-bold">
                   <MapPin size={13} weight="regular" />
                   {o.area}
                 </span>

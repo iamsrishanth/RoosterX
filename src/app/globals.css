@@ -55,7 +55,7 @@
   --color-flame: #DC2626;
   --color-flame-deep: #B91C1C;
   --color-gold: #F5A623;
-  --color-veg: #2E7D32;
+  --color-veg: #4ADE80;
   --color-muted-text: #B8A995;
 }
 
@@ -235,4 +235,25 @@
   .animate-marquee {
     animation: none !important;
   }
+  .reveal-element {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
+
+/* High-performance CSS reveals: instant on mobile (<768px), smooth on desktop */
+@media (min-width: 768px) {
+  .reveal-element {
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-element:not(.is-revealed) {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .reveal-element.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

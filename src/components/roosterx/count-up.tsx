@@ -1,10 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useInView, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 
-/* Counts up to `value` when scrolled into view. Renders the fallback string
-   immediately (progressive enhancement) and only animates after mount + motion allowed. */
 export function CountUp({
   value,
   duration = 1.4,
@@ -20,34 +17,53 @@ export function CountUp({
   decimals?: number;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
   const ref = React.useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
-
-  const mv = useMotionValue(0);
-  const spring = useSpring(mv, { duration: duration * 1000, bounce: 0 });
-
-  const [display, setDisplay] = React.useState("0");
+  const [display, setDisplay] = React.useState(() => value.toFixed(decimals));
 
   React.useEffect(() => {
-    if (!mounted || reduce || !inView) {
-      setDisplay(value.toFixed(decimals));
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
-    mv.set(value);
-    const unsub = spring.on("change", (v) => {
-      setDisplay(v.toFixed(decimals));
-    });
-    return () => unsub();
-  }, [mounted, reduce, inView, value, mv, spring, decimals]);
+    const el = ref.current;
+    if (!el) return;
 
-  const shown = mounted && !reduce && inView ? display : value.toFixed(decimals);
+    let startTime: number | null = null;
+    let animId: number | null = null;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+      // easeOutExpo for ultra-smooth counter motion
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const current = eased * value;
+      setDisplay(current.toFixed(decimals));
+      if (progress < 1) {
+        animId = requestAnimationFrame(animate);
+      }
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          animId = requestAnimationFrame(animate);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "-40px" },
+    );
+
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      if (animId) cancelAnimationFrame(animId);
+    };
+  }, [value, duration, decimals]);
+
   return (
     <span ref={ref} className={className}>
       {prefix}
-      {shown}
+      {display}
       {suffix}
     </span>
   );

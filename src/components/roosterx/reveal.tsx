@@ -3,9 +3,8 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-// Shared IntersectionObserver for all reveal animations to minimize main-thread overhead
+// Shared IntersectionObserver for desktop reveal animations - zero React state overhead
 let observer: IntersectionObserver | null = null;
-const callbacks = new Map<Element, () => void>();
 
 function getObserver() {
   if (typeof window === "undefined") return null;
@@ -14,12 +13,8 @@ function getObserver() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const cb = callbacks.get(entry.target);
-            if (cb) {
-              cb();
-              callbacks.delete(entry.target);
-              observer?.unobserve(entry.target);
-            }
+            entry.target.classList.add("is-revealed");
+            observer?.unobserve(entry.target);
           }
         });
       },
@@ -33,7 +28,6 @@ export function Reveal({
   children,
   className,
   delay = 0,
-  y = 20,
   as = "div",
 }: {
   children: React.ReactNode;
@@ -43,25 +37,23 @@ export function Reveal({
   as?: "div" | "section" | "li" | "span" | "article";
 }) {
   const ref = React.useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = React.useState(false);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
+    if (window.innerWidth < 768) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setIsVisible(true);
+      ref.current?.classList.add("is-revealed");
       return;
     }
     const el = ref.current;
     if (!el) return;
     const obs = getObserver();
     if (!obs) {
-      setIsVisible(true);
+      el.classList.add("is-revealed");
       return;
     }
-    callbacks.set(el, () => setIsVisible(true));
     obs.observe(el);
     return () => {
-      callbacks.delete(el);
       obs.unobserve(el);
     };
   }, []);
@@ -71,21 +63,14 @@ export function Reveal({
   return (
     <Comp
       ref={ref}
-      className={cn(className, "transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[opacity,transform]")}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "none" : `translateY(${y}px)`,
-        transitionDelay: `${delay}s`,
-      }}
+      data-reveal="true"
+      className={cn("reveal-element", className)}
+      style={delay > 0 ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}
     </Comp>
   );
 }
-
-const StaggerContext = React.createContext<{ isVisible: boolean }>({
-  isVisible: false,
-});
 
 export function StaggerGroup({
   children,
@@ -95,57 +80,41 @@ export function StaggerGroup({
   className?: string;
   stagger?: number;
 }) {
+  return <div className={className}>{children}</div>;
+}
+
+export function StaggerItem({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  y?: number;
+}) {
   const ref = React.useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = React.useState(false);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
+    if (window.innerWidth < 768) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setIsVisible(true);
+      ref.current?.classList.add("is-revealed");
       return;
     }
     const el = ref.current;
     if (!el) return;
     const obs = getObserver();
     if (!obs) {
-      setIsVisible(true);
+      el.classList.add("is-revealed");
       return;
     }
-    callbacks.set(el, () => setIsVisible(true));
     obs.observe(el);
     return () => {
-      callbacks.delete(el);
       obs.unobserve(el);
     };
   }, []);
 
   return (
-    <StaggerContext.Provider value={{ isVisible }}>
-      <div ref={ref} className={className}>
-        {children}
-      </div>
-    </StaggerContext.Provider>
-  );
-}
-
-export function StaggerItem({
-  children,
-  className,
-  y = 20,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  y?: number;
-}) {
-  const { isVisible } = React.useContext(StaggerContext);
-  return (
-    <div
-      className={cn(className, "transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[opacity,transform]")}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "none" : `translateY(${y}px)`,
-      }}
-    >
+    <div ref={ref} data-reveal="true" className={cn("reveal-element", className)}>
       {children}
     </div>
   );
